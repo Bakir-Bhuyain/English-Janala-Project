@@ -1,3 +1,8 @@
+const createElements = (arr) => {
+  const htmlElements = arr.map((el) => `<span class="btn">${el} </span>`);
+  return (htmlElements.join(" "));
+};
+
 const loadLesson = async () => {
   //async hocche special magical word er moto behave kore
   try {
@@ -19,10 +24,40 @@ const loadLevelWord = async (id) => {
   // console.log(url);
   const loadWord = await url.json();
   // console.log(loadWord.data);
-//   const clickBtn = document.getElementById(`lesson-btn-${id}`);
-//   clickBtn.classList.add("active");
+  //   const clickBtn = document.getElementById(`lesson-btn-${id}`);
+  //   clickBtn.classList.add("active");
   displayLevelWord(loadWord.data);
-  // console.log(data); 
+  // console.log(data);
+};
+
+const loadWordDetail = async (id) => {
+  const url = `https://openapi.programming-hero.com/api/word/${id}`;
+  //   console.log(url);
+  const res = await fetch(url);
+  const details = await res.json();
+  displayWordsDetails(details.data);
+};
+const displayWordsDetails = (word) => {
+  console.log(word);
+  const detailsBox = document.getElementById("details-container");
+  detailsBox.innerHTML = `
+      <div class="">
+            <h2 class="text-2xl font-bold">${word.word} (<i class="fa-solid fa-microphone"></i> ${word.pronunciation})</h2>
+          </div>
+          <div class="">
+            <h2 class="font-bold">Meaning</h2>
+            <p>${word.meaning}</p>
+          </div>
+          <div class="">
+            <h2 class="font-bold">Example</h2>
+            <p>${word.sentence}</p>
+          </div>
+          <div class="">
+            <h2 class="font-bold">সমার্থক শব্দ গুলো</h2>
+            <div class="">${createElements(word.synonyms)}</div>
+          </div>
+      `;
+  document.getElementById("my_modal_2").showModal();
 };
 
 const displayLevelWord = (words) => {
@@ -40,15 +75,15 @@ const displayLevelWord = (words) => {
     return;
   }
   words.forEach((word) => {
-    console.log(word);
+    //     console.log(word);
     const card = document.createElement("div");
     card.innerHTML = `
       <div class="bg-white rounded-xl shadow-sm text-center py-10 px-5 space-y-4">
         <h2 class="text-2xl font-bold">${word.word ? word.word : "শব্দ পাওয়া যায় নি!!"}</h2>
         <p class="font-poppins text-2xl">Meaning/ Pronunciation</p>
         <div class="font-bangla text-2xl">"${word.meaning ? word.meaning : "অর্থপাওয়া যায় নি!!"} / ${word.pronunciation ? word.pronunciation : "pronunciation পাওয়া যায় নি!!"}"</div>
-        <div onclick="my_modal_2.showModal()" class="flex justify-between items-center">
-        <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF50]"><i class="fa-solid fa-circle-info"></i></button>
+        <div class="flex justify-between items-center">
+        <button onclick="loadWordDetail(${word.id})" class="btn bg-[#1A91FF10] hover:bg-[#1A91FF50]"><i class="fa-solid fa-circle-info"></i></button>
         <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF50]"><i class="fa-solid fa-volume-high"></i></button>
         </div>
       </div>`;
