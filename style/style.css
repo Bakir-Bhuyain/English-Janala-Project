@@ -4,3 +4,8 @@
 .bangla-font{
       font-family: "Hind-Shiliguri", sans-serif;
 }
+
+.active {
+      background-color: #422AD5;
+      color:white;
+}
