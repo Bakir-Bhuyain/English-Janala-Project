@@ -3,6 +3,16 @@ const createElements = (arr) => {
   return (htmlElements.join(" "));
 };
 
+const manageSpinner = (status)=>{
+ if(status == true){
+      document.getElementById("spinner").classList.remove('hidden');
+      document.getElementById("word-container").classList.add('hidden');
+ }else{
+       document.getElementById("word-container").classList.remove("hidden");
+       document.getElementById("spinner").classList.add("hidden"); 
+ }
+}
+
 const loadLesson = async () => {
   //async hocche special magical word er moto behave kore
   try {
@@ -18,6 +28,7 @@ const loadLesson = async () => {
 };
 const loadLevelWord = async (id) => {
   // console.log(id)
+  manageSpinner (true);
   const url = await fetch(
     `https://openapi.programming-hero.com/api/level/${id}`,
   );
@@ -38,7 +49,7 @@ const loadWordDetail = async (id) => {
   displayWordsDetails(details.data);
 };
 const displayWordsDetails = (word) => {
-  console.log(word);
+//   console.log(word);
   const detailsBox = document.getElementById("details-container");
   detailsBox.innerHTML = `
       <div class="">
@@ -72,6 +83,7 @@ const displayLevelWord = (words) => {
         <h2 class="text-2xl bangla-font font-semibold">নেক্সট Lesson এ যান।</h2>
       </div>
 `;
+manageSpinner(false);
     return;
   }
   words.forEach((word) => {
@@ -89,6 +101,7 @@ const displayLevelWord = (words) => {
       </div>`;
     wordContainer.appendChild(card);
   });
+  manageSpinner(false);
 };
 
 const displayLesson = (lessons) => {
